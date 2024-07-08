@@ -1,9 +1,11 @@
+import LOG_TYPE from './config/logType'
 import PREFIX from './config/prefix'
-import { Options } from './types'
+import { LogMap, Options } from './types'
 import isStopLog from './utils/isStopLog'
 
 export default class Logger {
   public isDevEnv = true
+  public logMap: LogMap = []
 
   constructor(options: Options = {}) {
     const { checkDevEnv } = options
@@ -14,6 +16,11 @@ export default class Logger {
     if (isStopLog(input)) {
       return
     }
+
+    this.logMap.push({
+      type: LOG_TYPE.INFO,
+      content: input,
+    })
 
     console.log(...PREFIX.INFO, ...input)
   }
@@ -27,6 +34,11 @@ export default class Logger {
       return
     }
 
+    this.logMap.push({
+      type: LOG_TYPE.DEBUG,
+      content: input,
+    })
+
     console.log(...PREFIX.DEBUG, ...input)
   }
 
@@ -34,6 +46,11 @@ export default class Logger {
     if (isStopLog(input)) {
       return
     }
+
+    this.logMap.push({
+      type: LOG_TYPE.WARN,
+      content: input,
+    })
 
     console.log(...PREFIX.WARN, ...input)
   }
@@ -43,6 +60,33 @@ export default class Logger {
       return
     }
 
+    this.logMap.push({
+      type: LOG_TYPE.ERROR,
+      content: input,
+    })
+
     console.log(...PREFIX.ERROR, ...input)
+  }
+
+  log(options: { filterType?: LOG_TYPE[]; canLog?: boolean } = {}) {
+    const {
+      filterType = [
+        LOG_TYPE.INFO,
+        LOG_TYPE.DEBUG,
+        LOG_TYPE.WARN,
+        LOG_TYPE.ERROR,
+      ],
+      canLog = true,
+    } = options
+
+    if (!canLog) {
+      return
+    }
+
+    const newLogMap = this.logMap.filter((log) => {
+      return filterType.includes(log.type)
+    })
+
+    console.log(...PREFIX.LOG, newLogMap)
   }
 }

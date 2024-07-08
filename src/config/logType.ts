@@ -3,6 +3,7 @@ enum LOG_TYPE {
   DEBUG = 'DEBUG',
   WARN = 'WARN',
   ERROR = 'ERROR',
+  LOG = 'LOG',
 }
 
 export default LOG_TYPE
