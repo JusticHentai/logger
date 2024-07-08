@@ -1,7 +1,7 @@
 {
   "name": "@justichentai/logger",
-  "version": "1.0.0",
-  "description": "工具包模板",
+  "version": "1.0.1",
+  "description": "调试输出工具",
   "repository": {
     "type": "git",
     "url": "https://github.com/JusticHentai/logger"
