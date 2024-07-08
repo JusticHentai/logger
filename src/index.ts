@@ -1,20 +1,48 @@
-import { DefaultOptions, InnerOptions, Options } from './types'
+import PREFIX from './config/prefix'
+import { Options } from './types'
+import isStopLog from './utils/isStopLog'
 
-const defaults: DefaultOptions = {}
+export default class Logger {
+  public isDevEnv = true
 
-/**
- * 外部使用对象
- */
-export default class Utils {
-  public options: InnerOptions
-
-  constructor(options: Options) {
-    this.options = { ...defaults, ...options }
-    this.init()
+  constructor(options: Options = {}) {
+    const { checkDevEnv } = options
+    this.isDevEnv = checkDevEnv?.() || true
   }
 
-  init() {
-    console.log('utilsTemplate 初始化1')
-    return this
+  info(...input: any[]) {
+    if (isStopLog(input)) {
+      return
+    }
+
+    console.log(...PREFIX.INFO, ...input)
+  }
+
+  debug(...input: any[]) {
+    if (isStopLog(input)) {
+      return
+    }
+
+    if (!this.isDevEnv) {
+      return
+    }
+
+    console.log(...PREFIX.DEBUG, ...input)
+  }
+
+  warn(...input: any[]) {
+    if (isStopLog(input)) {
+      return
+    }
+
+    console.log(...PREFIX.WARN, ...input)
+  }
+
+  error(...input: any[]) {
+    if (isStopLog(input)) {
+      return
+    }
+
+    console.log(...PREFIX.ERROR, ...input)
   }
 }

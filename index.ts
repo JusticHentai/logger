@@ -1,3 +1,3 @@
-import Utils from './src'
+import Logger from './src'
 
-export { Utils as default }
+export { Logger as default }
