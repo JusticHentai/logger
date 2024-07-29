@@ -1,6 +1,6 @@
 import LOG_TYPE from './config/logType'
 import PREFIX from './config/prefix'
-import { LogMap, Options } from './types'
+import { LogMap, LogOptions, Options } from './types'
 import isStopLog from './utils/isStopLog'
 
 export default class Logger {
@@ -13,23 +13,19 @@ export default class Logger {
   }
 
   info(...input: any[]) {
-    if (isStopLog(input)) {
-      return
-    }
-
     this.logMap.push({
       type: LOG_TYPE.INFO,
       content: input,
     })
 
-    console.log(...PREFIX.INFO, ...input)
-  }
-
-  debug(...input: any[]) {
     if (isStopLog(input)) {
       return
     }
 
+    console.log(...PREFIX.INFO, ...input)
+  }
+
+  debug(...input: any[]) {
     if (!this.isDevEnv) {
       return
     }
@@ -39,36 +35,40 @@ export default class Logger {
       content: input,
     })
 
-    console.log(...PREFIX.DEBUG, ...input)
-  }
-
-  warn(...input: any[]) {
     if (isStopLog(input)) {
       return
     }
 
+    console.log(...PREFIX.DEBUG, ...input)
+  }
+
+  warn(...input: any[]) {
     this.logMap.push({
       type: LOG_TYPE.WARN,
       content: input,
     })
 
-    console.log(...PREFIX.WARN, ...input)
-  }
-
-  error(...input: any[]) {
     if (isStopLog(input)) {
       return
     }
 
+    console.log(...PREFIX.WARN, ...input)
+  }
+
+  error(...input: any[]) {
     this.logMap.push({
       type: LOG_TYPE.ERROR,
       content: input,
     })
 
+    if (isStopLog(input)) {
+      return
+    }
+
     console.log(...PREFIX.ERROR, ...input)
   }
 
-  log(options: { filterType?: LOG_TYPE[]; canLog?: boolean } = {}) {
+  log(options: LogOptions = {}) {
     const {
       filterType = [
         LOG_TYPE.INFO,
@@ -76,17 +76,19 @@ export default class Logger {
         LOG_TYPE.WARN,
         LOG_TYPE.ERROR,
       ],
-      canLog = true,
+      canLog = false,
     } = options
-
-    if (!canLog) {
-      return
-    }
 
     const newLogMap = this.logMap.filter((log) => {
       return filterType.includes(log.type)
     })
 
+    if (!canLog) {
+      return newLogMap
+    }
+
     console.log(...PREFIX.LOG, newLogMap)
+
+    return newLogMap
   }
 }
