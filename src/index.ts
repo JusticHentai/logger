@@ -68,7 +68,7 @@ export default class Logger {
     console.log(...PREFIX.ERROR, ...input)
   }
 
-  log(options: LogOptions = {}) {
+  log(options: LogOptions = {}): LogMap {
     const {
       filterType = [
         LOG_TYPE.INFO,
