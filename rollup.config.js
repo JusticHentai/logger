@@ -25,12 +25,11 @@ export default [
             {
               modules: false,
               useBuiltIns: 'usage',
-              corejs: '3.34.0',
+              corejs: '3.38.0',
             },
           ],
         ],
         plugins: ['@babel/plugin-transform-runtime'],
-        exclude: /node_module/,
       }),
       terser(),
     ],
